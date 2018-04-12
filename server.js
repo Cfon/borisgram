@@ -14,13 +14,18 @@ app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.static('public'));
 
+app.get('/photos', function (req, res) {
+  photos.find(function (err, photos) {
+    res.json(photos);
+  });
+});
+
 app.post('/photos', function (req, res) {
   upload(req, res, function (err) {
     if (err) {
       res.send(err);
       return;
     }
-
 
     var tempPath = path.join('temp', req.file.filename);
     var filename = Date.now() + '_' + req.file.originalname;

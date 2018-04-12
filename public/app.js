@@ -5,10 +5,6 @@
 
   // model
   var Photo = Backbone.Model.extend({
-    defaults: {
-      file: null,
-      caption: ''
-    },
     sync(method, model, options) {
       if (method === 'create') {
         var data = new FormData();
@@ -93,6 +89,20 @@
     }
   });
 
+  var PhotosView = Backbone.View.extend({
+    tmpl: _.template($('#photosView').html()),
+    carouselItemTmpl: _.template($('#carouselItemView').html()),
+    render() {
+      this.$el.html(this.tmpl());
+      var $carousel = this.$('.carousel-inner');
+      this.collection.forEach(photo => {
+        $carousel.append(this.carouselItemTmpl(photo.toJSON()));
+      });
+      $carousel.find('.carousel-item').first().addClass('active');
+      return this;
+    }
+  });
+
   // router
   var AppRouter = Backbone.Router.extend({
     initialize(options) {
@@ -106,7 +116,12 @@
     },
     index() {
       this.$navbar.html(new NavBarView().render().el);
-      // TODO: 
+      this.photos.fetch().then(() => {
+        var pv = new PhotosView({
+          collection: this.photos
+        });
+        this.$main.html(pv.render.call(pv).el);
+      });
     },
     uploadPhoto() {
       var form = new UploadPhotoFormView({
@@ -120,6 +135,7 @@
       this.$main.append(v.render().el);
     }
   });
+
 
   // router instance
   var ROUTER = new AppRouter({
