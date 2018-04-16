@@ -30,8 +30,8 @@
   });
 
   // views
-  var NavBarView = Backbone.View.extend({
-    tmpl: _.template($('#navBarView').html()),
+  var NavbarView = Backbone.View.extend({
+    tmpl: _.template($('#navbarView').html()),
     render() {
       this.$el.html(this.tmpl());
       return this;
@@ -115,7 +115,7 @@
       'upload': 'uploadPhoto'
     },
     index() {
-      this.$navbar.html(new NavBarView().render().el);
+      this.$navbar.html(new NavbarView().render().el);
       this.photos.fetch().then(() => {
         var pv = new PhotosView({
           collection: this.photos
@@ -130,7 +130,7 @@
       var v = new PhotoView({
         photos: this.photos
       });
-      this.$navbar.html(new NavBarView().render().el);
+      this.$navbar.html(new NavbarView().render().el);
       this.$main.html(form.render().el);
       this.$main.append(v.render().el);
     }
